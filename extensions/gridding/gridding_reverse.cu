@@ -6,10 +6,11 @@
  * @Email:  cshzxie@gmail.com
  */
 
-#include <bits/stdc++.h>
 #include <torch/extension.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
+#include <algorithm>
 
 #define CUDA_NUM_THREADS 512
 #define EPS 1e-6

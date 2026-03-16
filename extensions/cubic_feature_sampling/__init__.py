@@ -5,7 +5,29 @@
 # @Last Modified time: 2019-12-26 13:15:14
 # @Email:  cshzxie@gmail.com
 
+import os
 import torch
+
+# CRÍTICO: Adicionar caminhos de DLL ANTES de importar cubic_feature_sampling
+torch_lib_path = os.path.join(os.path.dirname(torch.__file__), 'lib')
+if os.path.exists(torch_lib_path):
+    try:
+        os.add_dll_directory(torch_lib_path)
+        
+    except:
+        pass
+
+# Adicionar caminho do CUDA
+cuda_paths = [
+    r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\bin',
+    r'C:\Program Files\NVIDIA\CUDA\bin',
+]
+for cuda_path in cuda_paths:
+    if os.path.exists(cuda_path):
+        try:
+            os.add_dll_directory(cuda_path)
+        except:
+            pass
 
 import cubic_feature_sampling
 

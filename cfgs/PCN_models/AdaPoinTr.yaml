@@ -29,6 +29,11 @@ dataset : {
             others: {subset: 'test'}},
   test : { _base_: cfgs/dataset_configs/PCN.yaml, 
             others: {subset: 'test'}}}
+  
+  type: Arqueo,
+  common: {
+    NAME: Arqueo
+  }
             
 model : {
     NAME: AdaPoinTr, 

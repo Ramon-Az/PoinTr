@@ -1,0 +1,8 @@
+NAME: Arqueo
+FOR_INFERENCE: False # Indica que é apenas para testar agora
+N_POINTS: 8192
+PARCIAL_POINTS_PATH: ../../../dados/processados/%s/parcial
+COMPLETO_POINTS_PATH: ../../../dados/processados/%s/completo
+loss_config: {
+  NAME: CDL1 #AdaPoinTr_ps55
+}

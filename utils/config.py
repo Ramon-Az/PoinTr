@@ -15,33 +15,42 @@ def log_config_to_file(cfg, pre='cfg', logger=None):
             continue
         print_log(f'{pre}.{key} : {val}', logger = logger)
 
-def merge_new_config(config, new_config):
+def merge_new_config(config, new_config, base_dir):
     for key, val in new_config.items():
         if not isinstance(val, dict):
-            if key == '_base_':
-                with open(new_config['_base_'], 'r') as f:
+            if key == 'BASE_CONFIG':
+                # Se o caminho vier duplicado com 'cfgs/cfgs', nós limpamos
+                if 'cfgs/cfgs' in val:
+                    val = val.replace('cfgs/cfgs', 'cfgs')
+                    
+                base_path = os.path.join(base_dir, val)
+                
+                if not os.path.isabs(base_path):
+                    base_path = os.path.join(base_dir, base_path)
+                with open(base_path, 'r') as f:
                     try:
                         val = yaml.load(f, Loader=yaml.FullLoader)
                     except:
                         val = yaml.load(f)
                 config[key] = EasyDict()
-                merge_new_config(config[key], val)
+                merge_new_config(config[key], val, base_dir)
             else:
                 config[key] = val
                 continue
         if key not in config:
             config[key] = EasyDict()
-        merge_new_config(config[key], val)
+        merge_new_config(config[key], val, base_dir)
     return config
 
 def cfg_from_yaml_file(cfg_file):
     config = EasyDict()
+    base_dir = os.path.dirname(os.path.dirname(cfg_file))  # PoinTr root
     with open(cfg_file, 'r') as f:
         try:
             new_config = yaml.load(f, Loader=yaml.FullLoader)
         except:
             new_config = yaml.load(f)
-    merge_new_config(config=config, new_config=new_config)        
+    merge_new_config(config=config, new_config=new_config, base_dir=base_dir)        
     return config
 
 def get_config(args, logger=None):

@@ -18,11 +18,34 @@
 # assignment: [#batch, #points], index of the matched point in the ground truth point cloud
 # the result is an approximation and the assignment is not guranteed to be a bijection
 
+import os
+import sys
 import time
 import numpy as np
 import torch
 from torch import nn
 from torch.autograd import Function
+
+# CRÍTICO: Adicionar caminhos de DLL ANTES de importar emd
+torch_lib_path = os.path.join(os.path.dirname(torch.__file__), 'lib')
+if os.path.exists(torch_lib_path):
+    try:
+        os.add_dll_directory(torch_lib_path)
+    except:
+        pass
+
+# Adicionar caminho do CUDA
+cuda_paths = [
+    r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\bin',
+    r'C:\Program Files\NVIDIA\CUDA\bin',
+]
+for cuda_path in cuda_paths:
+    if os.path.exists(cuda_path):
+        try:
+            os.add_dll_directory(cuda_path)
+        except:
+            pass
+
 import emd
 
 
@@ -95,4 +118,3 @@ def test_emd():
     print("Verified EMD: %lf" % np.sqrt(d.cpu().sum(-1)).mean())
 
 #test_emd()
-        

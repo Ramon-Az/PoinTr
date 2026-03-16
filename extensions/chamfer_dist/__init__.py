@@ -5,9 +5,34 @@
 # @Last Modified time: 2019-12-18 15:06:25
 # @Email:  cshzxie@gmail.com
 
-import torch
+import os
+import sys
 
+# CRÍTICO: Adicionar caminhos de DLL ANTES de qualquer import
+torch_lib_path = None
+try:
+    import torch
+    torch_lib_path = os.path.join(os.path.dirname(torch.__file__), 'lib')
+    if os.path.exists(torch_lib_path):
+        os.add_dll_directory(torch_lib_path)
+except:
+    pass
+
+# Adicionar caminho do CUDA
+cuda_paths = [
+    r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.8\bin',
+    r'C:\Program Files\NVIDIA\CUDA\bin',
+]
+for cuda_path in cuda_paths:
+    if os.path.exists(cuda_path):
+        try:
+            os.add_dll_directory(cuda_path)
+        except:
+            pass
+
+# Agora importar o módulo compilado
 import chamfer
+import torch
 
 
 class ChamferFunction(torch.autograd.Function):
@@ -77,8 +102,6 @@ class ChamferDistanceL1(torch.nn.Module):
             xyz2 = xyz2[non_zeros2].unsqueeze(dim=0)
 
         dist1, dist2 = ChamferFunction.apply(xyz1, xyz2)
-        # import pdb
-        # pdb.set_trace()
         dist1 = torch.sqrt(dist1)
         dist2 = torch.sqrt(dist2)
         return (torch.mean(dist1) + torch.mean(dist2))/2
@@ -101,4 +124,3 @@ class ChamferDistanceL1_PM(torch.nn.Module):
         dist1, _ = ChamferFunction.apply(xyz1, xyz2)
         dist1 = torch.sqrt(dist1)
         return torch.mean(dist1)
-

@@ -28,7 +28,14 @@ dataset : {
   val : { _base_: cfgs/dataset_configs/PCN.yaml, 
             others: {subset: 'test'}},
   test : { _base_: cfgs/dataset_configs/PCN.yaml, 
-            others: {subset: 'test'}}}
+            others: {subset: 'test'}},
+            
+  type: Arqueo,
+  common: {
+    NAME: Arqueo
+  }
+  }
+  
 model : {
   NAME: PoinTr, num_pred: 14336, num_query: 224, knn_layer: 1, trans_dim: 384}
   
